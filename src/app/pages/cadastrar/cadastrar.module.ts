@@ -11,7 +11,8 @@ import { CadastrarPage } from './cadastrar.page';
 @NgModule({
   imports: [
     CommonModule,
-    FormsModule,
+    FormsModule,,
+    ReactiveFormsModule,
     IonicModule,
     ReactiveFormsModule,
     CadastrarPageRoutingModule
