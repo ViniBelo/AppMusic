@@ -1,9 +1,76 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>cadastrar</ion-title>
+      <ion-title>cadastrar</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
-
+  <ion-label>
+      Add Songs
+  </ion-label>
+  <ion-list>
+      <form [formGroup]="form_add" (ngSubmit)="submitForm()">
+          <ion-item>
+              <ion-input placeholder="Nome do Artista" formControlName="name"></ion-input>
+          </ion-item>
+          <ion-item *ngIf="(((errorControl.name.touched) || (errorControl.name.dirty))&& errorControl.name.errors)">
+              <span *ngIf="errorControl.name.errors?.required">
+                  Nome do artista é obrigatório!
+              </span>
+          </ion-item>
+          <ion-item>
+              <ion-input placeholder="Nome da música" formControlName="music"></ion-input>
+          </ion-item>
+          <ion-item *ngIf="(((errorControl.music.touched) || (errorControl.music.dirty))&& errorControl.music.errors)">
+              <span *ngIf="errorControl.music.errors?.minlength">
+                  Nome da música é obrigatório!
+              </span>
+          </ion-item>
+          <ion-item>
+              <ion-input placeholder="Album" formControlName="album"></ion-input>
+          </ion-item>
+          <ion-item *ngIf="(((errorControl.album.touched) || (errorControl.album.dirty))&& errorControl.album.errors)">
+              <span *ngIf="errorControl.album.errors?.minlength">
+                  Nome da música é obrigatório!
+              </span>
+          </ion-item>
+          <ion-item>
+              <ion-select formControlName="genero" interface="popover" placeholder="Selecione Genero Musical">
+                  <ion-select-option value="axe">Axé</ion-select-option>
+                  <ion-select-option value="blues">Blues</ion-select-option>
+                  <ion-select-option value="country">Country</ion-select-option>
+                  <ion-select-option value="eletronica">Eletrônica</ion-select-option>
+                  <ion-select-option value="forro">Forró</ion-select-option>
+                  <ion-select-option value="funk">Funk</ion-select-option>
+                  <ion-select-option value="gospel">Gospel</ion-select-option>
+                  <ion-select-option value="hipHop">Hip Hop</ion-select-option>
+                  <ion-select-option value="jazz">Jazz</ion-select-option>
+                  <ion-select-option value="mpb">MPB</ion-select-option>
+                  <ion-select-option value="musicaClassica">Música Clássica</ion-select-option>
+                  <ion-select-option value="pagode">Pagode</ion-select-option>
+                  <ion-select-option value="pop">Pop</ion-select-option>
+                  <ion-select-option value="rap">Rap</ion-select-option>
+                  <ion-select-option value="reggae">Reggae</ion-select-option>
+                  <ion-select-option value="rock">Rock</ion-select-option>
+                  <ion-select-option value="samba">Samba</ion-select-option>
+                  <ion-select-option value="sertanejo">Sertanejo</ion-select-option>
+              </ion-select>
+          </ion-item>
+          <ion-item *ngIf="(((errorControl.genero.touched) || (errorControl.genero.dirty))&& errorControl.genero.errors)">
+              <span *ngIf="errorControl.genero.errors?.required">
+                  Genero Musical é obrigatório!
+              </span>
+          </ion-item>
+          <ion-item>
+              <ion-label>Data de lançamento</ion-label>
+              <ion-datetime-button datetime="datetime"></ion-datetime-button>
+              <ion-modal [keepContentsMounted]="true">
+                  <ng-template>
+                      <ion-datetime id="datetime" max="{{data}}" presentation="date" formControlName="dataNascimento"></ion-datetime>
+                  </ng-template>
+              </ion-modal>
+          </ion-item>
+          <ion-button expand="block" type="submit">Add Song</ion-button>
+      </form>
+  </ion-list>
 </ion-content>
