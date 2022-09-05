@@ -22,7 +22,7 @@
               <ion-input placeholder="Nome da música" formControlName="music"></ion-input>
           </ion-item>
           <ion-item *ngIf="(((errorControl.music.touched) || (errorControl.music.dirty))&& errorControl.music.errors)">
-              <span *ngIf="errorControl.music.errors?.minlength">
+              <span *ngIf="errorControl.music.errors?.required">
                   Nome da música é obrigatório!
               </span>
           </ion-item>
@@ -30,8 +30,8 @@
               <ion-input placeholder="Album" formControlName="album"></ion-input>
           </ion-item>
           <ion-item *ngIf="(((errorControl.album.touched) || (errorControl.album.dirty))&& errorControl.album.errors)">
-              <span *ngIf="errorControl.album.errors?.minlength">
-                  Nome da música é obrigatório!
+              <span *ngIf="errorControl.album.errors?.required">
+                  Album é obrigatório!
               </span>
           </ion-item>
           <ion-item>
@@ -66,7 +66,7 @@
               <ion-datetime-button datetime="datetime"></ion-datetime-button>
               <ion-modal [keepContentsMounted]="true">
                   <ng-template>
-                      <ion-datetime id="datetime" max="{{data}}" presentation="date" formControlName="dataNascimento"></ion-datetime>
+                      <ion-datetime id="datetime" max="{{data}}" presentation="date" formControlName="dataLanc"></ion-datetime>
                   </ng-template>
               </ion-modal>
           </ion-item>
