@@ -1,52 +1,82 @@
 export class Song {
     private _id: any
-    private _nome: string
-    private _artist: string
+    private _name: string
+    private _music: string
+    private _compositor : string;
+    private _produtora : string;
     private _album: string
-    private _launchDate: string
+    private _genero : string;
+    private _dataLanc: string
 
-    constructor(nome: string, artist: string, album: string, launchDate: string){
+    constructor(name: string, music: string, compositor : string, produtora : string, album: string, genre : string, dataLanc: string){
         let chave = new Date
         this._id = chave.getTime()
-        this._nome = nome
-        this._artist = artist
-        this._album = album
-        this._launchDate = launchDate
+        this._name = name;
+        this._music = music;
+        this._compositor = compositor;
+        this._produtora = produtora;
+        this._album = album;
+        this._genero = genre;
+        this._dataLanc = dataLanc;
     }
 
     public get id() {
-        return this._id
+        return this._id;
     }
 
-    public get nome() {
-        return this._nome
+    public get name() {
+        return this._name;
     }
 
-    public get artist() {
-        return this._artist
+    public get music() {
+        return this._music;
+    }
+
+    public get compositor(){
+        return this._compositor;
+    }
+
+    public get produtora(){
+        return this._produtora;
     }
 
     public get album() {
-        return this._album
+        return this._album;
     }
 
-    public get launchDate() {
-        return this._launchDate
+    public get genero() {
+        return this._genero;
     }
 
-    public set nome(nome: string) {
-        this._nome = nome
+    public get dataLanc() {
+        return this._dataLanc;
     }
 
-    public set artist(artist: string) {
-        this._artist = artist
+    public set name(name: string) {
+        this._name = name;
+    }
+
+    public set music(music: string) {
+        this._music = music;
+    }
+
+    public set compositor(compositor : string){
+        this._compositor = compositor;
+    }
+
+    public set produtora(produtora : string){
+        this._produtora = produtora;
     }
 
     public set album(album: string) {
-        this._album = album
+        this._album = album;
     }
 
-    public set launchDate(launchDate: string) {
-        this._launchDate = launchDate
+    public set genero(genero : string){
+        this._genero = genero;
+    }
+
+    public set dataLanc(dataLanc: string) {
+        this._dataLanc = dataLanc;
     }
 }

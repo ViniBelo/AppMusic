@@ -27,6 +27,22 @@
               </span>
           </ion-item>
           <ion-item>
+            <ion-input placeholder="Nome do compositor" formControlName="compositor"></ion-input>
+        </ion-item>
+        <ion-item *ngIf="(((errorControl.compositor.touched) || (errorControl.compositor.dirty))&& errorControl.compositor.errors)">
+            <span *ngIf="errorControl.compositor.errors?.required">
+                Nome do compositor é obrigatório!
+            </span>
+        </ion-item>
+        <ion-item>
+            <ion-input placeholder="Nome da produtora" formControlName="produtora"></ion-input>
+        </ion-item>
+        <ion-item *ngIf="(((errorControl.produtora.touched) || (errorControl.produtora.dirty))&& errorControl.produtora.errors)">
+            <span *ngIf="errorControl.produtora.errors?.required">
+                Nome da produtora é obrigatório!
+            </span>
+        </ion-item>
+          <ion-item>
               <ion-input placeholder="Album" formControlName="album"></ion-input>
           </ion-item>
           <ion-item *ngIf="(((errorControl.album.touched) || (errorControl.album.dirty))&& errorControl.album.errors)">

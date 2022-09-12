@@ -9,6 +9,7 @@ import { SongsService } from 'src/app/services/songs.service';
   templateUrl: './cadastrar.page.html',
   styleUrls: ['./cadastrar.page.scss'],
 })
+
 export class CadastrarPage implements OnInit {
   data : string
   form_add : FormGroup
@@ -24,6 +25,8 @@ export class CadastrarPage implements OnInit {
     this.form_add = this.formBuilder.group({
       name : ["",[Validators.required]],
       music : ["", [Validators.required]],
+      compositor : ["", [Validators.required]],
+      produtora : ["", [Validators.required]],
       album : ["", [Validators.required]],
       genero : ["", [Validators.required]],
       dataLanc : ["", [Validators.required]] 
@@ -45,7 +48,7 @@ export class CadastrarPage implements OnInit {
   }
 
   private cadastrar(){
-    //this.songsService.inserir(this.form_add.value);
+    this.songsService.inserir(this.form_add.value);
     this.presentAlert("Music", "Success", "Song Added");
     this.router.navigate(['/home']);
   }
