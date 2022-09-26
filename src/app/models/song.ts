@@ -1,7 +1,7 @@
 export class Song {
-    private _id: any
-    private _name: string
-    private _music: string
+    private _id: string;
+    private _name: string;
+    private _music: string;
     private _compositor : string;
     private _produtora : string;
     private _album: string
@@ -9,8 +9,6 @@ export class Song {
     private _dataLanc: string
 
     constructor(name: string, music: string, compositor : string, produtora : string, album: string, genre : string, dataLanc: string){
-        let chave = new Date
-        this._id = chave.getTime()
         this._name = name;
         this._music = music;
         this._compositor = compositor;
@@ -20,7 +18,7 @@ export class Song {
         this._dataLanc = dataLanc;
     }
 
-    public get id() {
+    public get id() : string {
         return this._id;
     }
 
