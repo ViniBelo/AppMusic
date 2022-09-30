@@ -8,7 +8,7 @@ export class SongsService {
   private _songs: Song[] = [];
 
   constructor() { 
-    let song = new Song("teste", "teste", "teste", "teste", "teste", "teste", "2002-01-07");
+    let song = new Song("Vitao", "Rap do Xarquinho", "teste", "teste", "teste", "teste", "2002-01-07");
     this.inserir(song);
 
   }
