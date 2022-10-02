@@ -1,8 +1,8 @@
-import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
-import { AlertController } from '@ionic/angular';
-import { SongsService } from 'src/app/services/songs.service';
+import { Component, OnInit } from '@angular/core'
+import { FormBuilder, FormGroup, Validators } from '@angular/forms'
+import { Router } from '@angular/router'
+import { AlertController, LoadingController } from '@ionic/angular'
+import { SongFirebaseService } from 'src/app/services/song-firebase.service'
 
 @Component({
   selector: 'app-cadastrar',
@@ -14,23 +14,30 @@ export class CadastrarPage implements OnInit {
   data : string
   form_add : FormGroup
   isSubmitted : boolean = false
+  image: any
 
   constructor(private alertController: AlertController, 
     private router: Router, 
-    private songsService : SongsService, 
-    private formBuilder : FormBuilder) { }
+    private songFS : SongFirebaseService, 
+    private formBuilder : FormBuilder,
+    private loadingCtrl: LoadingController) { }
 
   ngOnInit() {
-    this.data = new Date().toISOString();
+    this.data = new Date().toISOString()
     this.form_add = this.formBuilder.group({
-      name : ["",[Validators.required]],
-      music : ["", [Validators.required]],
-      compositor : ["", [Validators.required]],
-      produtora : ["", [Validators.required]],
-      album : ["", [Validators.required]],
-      genero : ["", [Validators.required]],
-      dataLanc : ["", [Validators.required]] 
-    });
+      name : ['',[Validators.required]],
+      music : ['', [Validators.required]],
+      compositor : ['', [Validators.required]],
+      produtora : ['', [Validators.required]],
+      album : ['', [Validators.required]],
+      genero : ['', [Validators.required]],
+      dataLanc : ['', [Validators.required]],
+      image: ['', [Validators.required]]
+    })
+  }
+
+  uploadFile(image: any) {
+    this.image = image.files
   }
 
   get errorControl(){
@@ -38,19 +45,30 @@ export class CadastrarPage implements OnInit {
   }
 
   submitForm() : boolean{
-    this.isSubmitted = true;
+    this.isSubmitted = true
     if(!this.form_add.valid){
-      this.presentAlert("Music","Error","All fields are required");
-      return false;
+      this.presentAlert('Music','Error','All fields are required')
+      return false
     }else{
-      this.cadastrar();
+      this.cadastrar()
     }
   }
 
   private cadastrar(){
-    this.songsService.inserir(this.form_add.value);
-    this.presentAlert("Music", "Success", "Song Added");
-    this.router.navigate(['/home']);
+    this.showLoading('Wait a moment', 10000)
+    this.songFS.sendImage(this.image,
+      this.form_add.value)
+      .then(() => {
+        this.loadingCtrl.dismiss()
+        this.presentAlert('Music', 'SUCCESS!', 'Song Added!')
+        this.router.navigate(['/home'])
+      })
+      .catch((error) => {
+        this.loadingCtrl.dismiss()
+        this.presentAlert('Music', 'ERROR!', 'Error Adding Song!')
+        this.router.navigate(['/home'])
+        console.error(error)
+      })
   }
 
   async presentAlert(header : string, subHeader : string, message : string) {
@@ -59,9 +77,17 @@ export class CadastrarPage implements OnInit {
       subHeader: subHeader,
       message: message,
       buttons: ['OK'],
-    });
+    })
 
-    await alert.present();
+    await alert.present()
   }
 
+  async showLoading(message: string, duration: number) {
+    const loading = await this.loadingCtrl.create({
+      message: message,
+      duration: duration
+    })
+
+    loading.present()
+  }
 }

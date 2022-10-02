@@ -2,7 +2,7 @@ export const environment = {
   production: true,
   firebaseConfig : {
     apiKey: "AIzaSyCcKMf6n5PtrglZRQx7_bkHpFY_Dlz6lsc",
-    authDomain: "appmusic-f79bf.firebaseapp.com",
+    authDomain: "localhost  ",
     projectId: "appmusic-f79bf",
     storageBucket: "appmusic-f79bf.appspot.com",
     messagingSenderId: "800609730909",

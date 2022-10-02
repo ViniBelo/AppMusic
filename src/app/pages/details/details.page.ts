@@ -1,9 +1,10 @@
-import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
-import { AlertController } from '@ionic/angular';
-import { Song } from 'src/app/models/song';
-import { SongsService } from 'src/app/services/songs.service';
+import { Component, OnInit } from '@angular/core'
+import { FormBuilder, FormGroup, Validators } from '@angular/forms'
+import { Router } from '@angular/router'
+import { stringLength } from '@firebase/util'
+import { AlertController, LoadingController } from '@ionic/angular'
+import { Song } from 'src/app/models/song'
+import { SongFirebaseService } from 'src/app/services/song-firebase.service'
 
 @Component({
   selector: 'app-details',
@@ -11,17 +12,23 @@ import { SongsService } from 'src/app/services/songs.service';
   styleUrls: ['./details.page.scss'],
 })
 export class DetailsPage implements OnInit {
-  song : Song;
-  form_edit : FormGroup;
-  isSubmitted : boolean = false;
-  data : string;
-  edition : boolean = true;
-  constructor(private router : Router, private alertController : AlertController, private songsService : SongsService, private formBuilder : FormBuilder) { }
+  song : Song
+  form_edit : FormGroup
+  isSubmitted : boolean = false
+  data : string
+  edition : boolean = true
+  image: any
+
+  constructor(private router : Router,
+    private alertController : AlertController,
+    private songFS : SongFirebaseService,
+    private formBuilder : FormBuilder,
+    private loadingCtrl: LoadingController) { }
 
   ngOnInit() {
-    const nav = this.router.getCurrentNavigation();
-    this.song = nav.extras.state.objeto;
-    this.data = new Date().toISOString();
+    const nav = this.router.getCurrentNavigation()
+    this.song = nav.extras.state.objeto
+    this.data = new Date().toISOString()
     this.form_edit = this.formBuilder.group({
       name : [this.song.name,[Validators.required]],
       music : [this.song.music, [Validators.required]],
@@ -29,49 +36,86 @@ export class DetailsPage implements OnInit {
       produtora : [this.song.produtora, [Validators.required]],
       album : [this.song.album, [Validators.required]],
       genero : [this.song.genero, [Validators.required]],
-      dataLanc : [this.song.dataLanc, [Validators.required]] 
+      dataLanc : [this.song.dataLanc, [Validators.required]]
     })
   }
 
+  uploadFile(image: any) {
+    this.image = image.files
+  }
+
   get errorControl(){
-    return this.form_edit.controls;
+    return this.form_edit.controls
   }
 
   submitForm():boolean{
-    this.isSubmitted = true;
+    this.isSubmitted = true
     if(!this.form_edit.valid){
-      this.presentAlert("Music", "Error", "All fields are required!");
-      return false;
+      this.presentAlert("Music", "Error", "All fields are required!")
+      return false
     }else{
-      this.edit();
+      this.edit()
     }
   }
 
   toggleEdition(){
     if(this.edition == true){
-      this.edition = false;
+      this.edition = false
     }else{
-      this.edition = true;
+      this.edition = true
     }
   }
 
   edit(){
-    this.songsService.editar(this.song, this.form_edit.value['name'], this.form_edit.value['music'], this.form_edit.value['compositor'], this.form_edit.value['produtora'], this.form_edit.value['album'], this.form_edit.value['genero'], this.form_edit.value['dataLanc'])
-    this.presentAlert("Music", "Sucess", "Song edited");
-    this.router.navigate(['/home']);
+    this.showLoading('Wait a moment', 10000)
+
+    if(this.image) {
+      this.songFS.editImage(this.image,
+        this.form_edit.value,
+        this.song.id)
+        .then(() => {
+          this.songFS.deleteImage(this.song.downloadURL)
+          this.loadingCtrl.dismiss()
+          this.presentAlert("Music", "SUCCESS", "Song edited!")
+          this.router.navigate(['/home'])
+        })
+        .catch((error) => {
+          this.loadingCtrl.dismiss()
+          this.presentAlert("Music", "ERROR!", "Error editing song!")
+          this.router.navigate(['/home'])
+          console.error(error)
+        })
+    } else {
+      this.songFS.editSong(this.form_edit.value,
+        this.song.id)
+        .then(() => {
+          this.loadingCtrl.dismiss()
+          this.presentAlert("Music", "SUCCESS", "Song edited!")
+          this.router.navigate(['/home'])
+        })
+        .catch((error) => {
+          this.loadingCtrl.dismiss()
+          this.presentAlert("Music", "ERROR!", "Error editing song!")
+          this.router.navigate(['/home'])
+          console.error(error)
+        })
+    }
   }
 
   delete(){
-    this.presentAlertConfirm("Music", "Delete song", "Do you really want to delete the song?");
+    this.presentAlertConfirm("Music", "Delete song", "Do you really want to delete the song?")
   }
 
   private deleteSong(song : Song){
-    if(this.songsService.excluir(this.song)){
-      this.presentAlert("Music", "Sucess", "Song deleted");
-      this.router.navigate(['/home']);
-    }else{
-      this.presentAlert("Music", "Error", "Song not found");
-    }
+    this.songFS.deleteSong(song)
+    .then(() => {
+      this.presentAlert('Music', 'Delete', 'Exclusion realized!')
+      this.router.navigate(['/home'])
+    })
+    .catch((error) => {
+      this.presentAlert('Music', 'Delete', 'Song does not found!')
+      console.error(error)
+    })
   }
 
   async presentAlert(header : string, subHeader : string, message : string) {
@@ -80,9 +124,9 @@ export class DetailsPage implements OnInit {
       subHeader: subHeader,
       message: message,
       buttons: ['OK'],
-    });
+    })
 
-    await alert.present();
+    await alert.present()
   }
 
   async presentAlertConfirm(header : string, subHeader : string, message : string) {
@@ -101,15 +145,21 @@ export class DetailsPage implements OnInit {
           text: 'OK',
           role: 'confirm',
           handler: () => {
-            this.deleteSong(this.song);
+            this.deleteSong(this.song)
           },
         },
       ],
-    });
+    })
 
-    await alert.present();
-
-    const { role } = await alert.onDidDismiss();
+    await alert.present()
   }
 
+  async showLoading(message: string, duration: number) {
+    const loading = await this.loadingCtrl.create({
+      message: message,
+      duration: duration
+    })
+
+    loading.present()
+  }
 }

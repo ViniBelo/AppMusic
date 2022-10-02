@@ -1,6 +1,6 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>Songs</ion-title>
+    <ion-title> Songs </ion-title>
   </ion-toolbar>
 </ion-header>
 
@@ -10,7 +10,10 @@
     <form [formGroup]="form_edit" (ngSubmit)="submitForm()">
       <ion-item>
         <ion-label>Enable Edit</ion-label>
-        <ion-toggle color="sucess" (ionChange)="toggleEdition()"></ion-toggle>
+        <ion-toggle color="success" (ionChange)="toggleEdition()"></ion-toggle>
+      </ion-item>
+      <ion-item>
+        <img alt="Album image" src="{{song.downloadURL}}"/>
       </ion-item>
       <ion-item>
         <ion-input disabled="{{edition}}" placeholder="Nome do Artista" formControlName="name" ></ion-input>
@@ -88,6 +91,9 @@
           </ng-template>
         </ion-modal>
       </ion-item>
+      <ion-button disabled="{{edicao}}" size="default" color="success" shape="round">
+        <input type="file" (change)="uploadFile($event.target)"/>
+      </ion-button>
       <ion-button disabled="{{edition}}" expand="block" type="submit">Save</ion-button>
       <ion-button disabled="{{edition}}" expand="block" (click)="delete()" color="danger" >Delete</ion-button>
     </form>

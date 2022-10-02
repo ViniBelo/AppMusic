@@ -1,21 +1,24 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>Home</ion-title>
+    <ion-title> Home </ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
   <ion-list>
-      <ion-item-sliding *ngFor="let song of songs">
-          <ion-item>
-              <ion-label>{{song.name}}</ion-label>
-              <ion-label>{{song.music}}</ion-label>
-          </ion-item>
-              <ion-item-options side="end">
-                  <ion-item-option (click)="goToDetails(song)">
-                      <ion-icon name="create-outline"></ion-icon>
-                  </ion-item-option>
-              </ion-item-options>
-      </ion-item-sliding>
+    <ion-item-sliding *ngFor="let song of songs">
+      <ion-item>
+        <ion-avatar slot="start">
+          <img alt="Imagem de perfil" src="{{song.downloadURL}}" />
+        </ion-avatar>
+        <ion-label>{{song.name}}</ion-label>
+        <ion-label>{{song.music}}</ion-label>
+      </ion-item>
+      <ion-item-options side="end">
+        <ion-item-option (click)="goToDetails(song)">
+          <ion-icon name="create-outline"></ion-icon>
+        </ion-item-option>
+      </ion-item-options>
+    </ion-item-sliding>
   </ion-list>
 </ion-content>
